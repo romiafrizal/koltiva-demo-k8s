@@ -39,7 +39,7 @@ spec:
     spec:
       containers:
       - name: wooless
-        image:  romiafrizal/wooless-python:latest
+        image:  asia.gcr.io/$PROJECT_ID/production/wooless:$SHORT_SHA
         imagePullPolicy: Always
         ports:
         - containerPort: 80
@@ -47,7 +47,7 @@ spec:
         resources:
           requests:
             cpu: 50m
-        
+
 ---
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
@@ -55,7 +55,7 @@ metadata:
   name: wooless
   namespace: production
 spec:
-  maxReplicas: 10
+  maxReplicas: 25
   minReplicas: 3
   scaleTargetRef:
     apiVersion: apps/v1
@@ -75,7 +75,7 @@ metadata:
     networking.gke.io/managed-certificates: wooless
 spec:
   rules:
-    - host: koltiva.wooless.com
+    - host: app.wooless.com
       http:
         paths:
         - path: /*
@@ -86,7 +86,6 @@ spec:
               port: 
                 number: 80
 
-###_GOOGLE_CERTIFICATE_###
 ---
 apiVersion: networking.gke.io/v1beta2
 kind: ManagedCertificate
@@ -95,4 +94,4 @@ metadata:
   namespace: production
 spec:
   domains:
-    - koltiva.wooless.com
+    - app.wooless.com
